@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Calculator</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #0a1f44; /* dark blue */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .calculator {
+    background-color: #122a5a; /* slightly darker shade */
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    padding: 20px;
+    width: 300px;
+  }
+  .display {
+    width: 100%;
+    height: 60px;
+    text-align: right;
+    font-size: 2rem;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #87ceeb; /* sky blue */
+    color: #0a1f44; /* dark blue text */
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  button {
+    background-color: #1c3a72;
+    color: #fff;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  button:hover {
+    background-color: #2b5ea3; /* lighter blue */
+    transform: scale(1.1);
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  .operator {
+    background-color: #4682b4; /* steel blue */
+  }
+  .clear {
+    background-color: #ff4d4d; /* red for clear */
+  }
+  .equal {
+    background-color: #1e90ff; /* bright blue for = */
+  }
+</style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" class="display" disabled>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="appendOperation('/')">÷</button>
+      <button class="operator" onclick="appendOperation('*')">×</button>
+      <button class="operator" onclick="appendOperation('-')">−</button>
+      
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperation('+')">+</button>
+      
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button class="equal" onclick="calculate()">=</button>
+
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button onclick="appendNumber('0')">0</button>
+    </div>
+  </div>
+
+<script>
+  let currentInput = '';
+  let previousInput = '';
+  let currentOperation = '';
+
+  function appendNumber(number) {
+    currentInput += number;
+    document.getElementById('display').value = `${previousInput} ${currentOperation} ${currentInput}`;
+  }
+
+  function appendOperation(operation) {
+    if (currentInput === '') return;
+    if (previousInput !== '') calculate();
+    currentOperation = operation;
+    previousInput = currentInput;
+    currentInput = '';
+    document.getElementById('display').value = `${previousInput} ${currentOperation}`;
+  }
+
+  function calculate() {
+    if (previousInput === '' || currentInput === '') return;
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+    switch (currentOperation) {
+      case '+': result = prev + current; break;
+      case '-': result = prev - current; break;
+      case '*': result = prev * current; break;
+      case '/': 
+        if (current === 0) {
+          alert("Cannot divide by zero");
+          return;
+        }
+        result = prev / current;
+        break;
+      default: return;
+    }
+    currentInput = result.toString();
+    currentOperation = '';
+    previousInput = '';
+    document.getElementById('display').value = currentInput;
+  }
+
+  function clearDisplay() {
+    currentInput = '';
+    previousInput = '';
+    currentOperation = '';
+    document.getElementById('display').value = '';
+  }
+</script>
+</body>
+</html>
